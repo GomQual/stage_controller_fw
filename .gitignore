@@ -1,0 +1,36 @@
+# STM32CubeIDE specific files
+.vscode/
+.metadata/
+.loadpath
+.launches/
+RTE/
+*.rteconfig
+
+# Build directories and output files
+Debug/
+Release/
+build/
+*.o
+*.d
+*.axf
+*.elf
+*.hex
+*.bin
+*.srec
+*.map
+*.ld
+*.list
+*.log
+*.dep
+*.gdb
+
+# Libraries
+*.a
+*.lib
+
+# Auto-generated files
+/*.pack
+
+# System files
+.DS_Store
+Thumbs.db
