@@ -18,7 +18,6 @@ build/
 *.bin
 *.srec
 *.map
-*.ld
 *.list
 *.log
 *.dep
