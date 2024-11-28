@@ -5,6 +5,7 @@
 .launches/
 RTE/
 *.rteconfig
+.settings/
 
 # Build directories and output files
 Debug/
@@ -33,3 +34,4 @@ build/
 # System files
 .DS_Store
 Thumbs.db
+.settings/language.settings.xml

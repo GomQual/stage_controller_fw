@@ -51,7 +51,7 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 SysVarType SysVar = {
-	"100230519", //char ver[16];
+	"100241120", //char ver[16];
 	STATE_STANDBY, //uint8_t state;
 	0, //uint8_t secFlag;
 	0, //uint8_t dsecFlag;
@@ -97,7 +97,7 @@ ParamVarType ParamVar = {
 			0.05L, //double ta;
 		}, // StpMotorParamType mp[3];
 	},
-	{ 1, 1, 0, 0 },
+	{ 1, 1, 1, 0 },
 };
 
 uint32_t ccr_monitor[2][CCR_MONITOR_MAX] = { {0, }, {0, } };
@@ -130,6 +130,7 @@ void System_Init(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -170,44 +171,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  	/* USER CODE END WHILE */
-	  	switch(SysVar.state)
-		{
-			case STATE_STANDBY:
-				if(Op_Standby(0))
-					Op_Standby(0);
-				break;
-			case STATE_COMMAND:
+	switch(SysVar.state)
+	{
+		case STATE_STANDBY:
+			if(Op_Standby(0))
+				Op_Standby(0);
+			break;
+		case STATE_COMMAND:
+			if(Op_Command(0))
+				Op_Standby(1);
+			break;
+		case STATE_MOTOR_ORIGIN:
+			if(Op_MotorOrigin(0))
 				if(Op_Command(0))
 					Op_Standby(1);
-				break;
-			case STATE_MOTOR_ORIGIN:
-				if(Op_MotorOrigin(0))
-					if(Op_Command(0))
-						Op_Standby(1);
-				break;
-			case STATE_MOTOR_MOVE_FAST:
-				if(Op_MotorMoveFast(0, NULL, NULL))
-					if(Op_Command(0))
-						Op_Standby(1);
-				break;
-			case STATE_MOTOR_MOVE_LINE:
-				if(Op_MotorMoveLine(0, NULL, NULL, NULL))
-					if(Op_Command(0))
-						Op_Standby(1);
-				break;
-			default:
-				Op_Standby(1);
-		}
-	  	if(SysVar.secFlag)
-	  	{
-	  		SysVar.secFlag = 0;
-	  	}
-	  	if( (comm_bufIdxH-comm_bufIdxT+MAX_BUFFER_SIZE) % MAX_BUFFER_SIZE > 0 )
-	  	{
-	  		COMM_G_CMD(&huart1, comm_buf[comm_bufIdxT]);
-	  		comm_bufIdxT = (comm_bufIdxT+1) % MAX_BUFFER_SIZE;
-	  	}
+			break;
+		case STATE_MOTOR_MOVE_FAST:
+			if(Op_MotorMoveFast(0, NULL, NULL))
+				if(Op_Command(0))
+					Op_Standby(1);
+			break;
+		case STATE_MOTOR_MOVE_LINE:
+			if(Op_MotorMoveLine(0, NULL, NULL, NULL))
+				if(Op_Command(0))
+					Op_Standby(1);
+			break;
+		default:
+			Op_Standby(1);
+	}
+	if(SysVar.secFlag)
+	{
+		SysVar.secFlag = 0;
+	}
+	if( (comm_bufIdxH-comm_bufIdxT+MAX_BUFFER_SIZE) % MAX_BUFFER_SIZE > 0 )
+	{
+		COMM_G_CMD(&huart1, comm_buf[comm_bufIdxT]);
+		comm_bufIdxT = (comm_bufIdxT+1) % MAX_BUFFER_SIZE;
+	}
+	/* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -746,6 +748,7 @@ void System_Init(void)
 	}
 
 	HAL_TIM_Base_Start(&htim1);
+	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start(&htim5);
 
 	strcpy(Op.cmd[0], "N1 G28*12");

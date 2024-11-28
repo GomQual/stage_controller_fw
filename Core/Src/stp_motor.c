@@ -224,12 +224,14 @@ uint8_t Motor_MoveLine(double lineSpd, int32_t targ[MOTOR_CH_NUM])
 uint16_t Motor_Speed2Period(StpMotorType *m, double spd)
 {
 	double f;
+	uint16_t pulse;
 	if(spd > m->param->vMax)
 		spd = m->param->vMax;
 	else if(spd < m->param->vMin)
 		spd = m->param->vMin;
 	f = spd / m->param->r;
-	return (uint16_t)(m->clk / f / 2.0);
+	pulse = (uint16_t)(m->clk / f / 2.0);
+	return pulse;
 }
 
 void Motor_Move(StpMotorType *m, uint8_t dir, uint16_t pulse)

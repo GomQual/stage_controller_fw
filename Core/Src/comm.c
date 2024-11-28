@@ -9,6 +9,7 @@ int comm_bufIdxT = 0;
 
 void COMM_IT_Receive(UART_HandleTypeDef *huart, uint8_t data)
 {
+	data = data + 1;
 	HAL_UART_Transmit(huart, &data, 1, COMM_TIMEOUT);
 }
 
@@ -349,7 +350,7 @@ void COMM_G_CMD(UART_HandleTypeDef *huart, uint8_t data)
 					COMM_Print(huart, "ok V%s\r", SysVar.ver);
 					break;
 				default:
-					Print("!!! Wrong Command\r\n");
+					Print("!!! Wrong Command: %s\r\n", m_buf);
 					COMM_Print(huart, "!! Wrong Command\r");
 					break;
 				}
